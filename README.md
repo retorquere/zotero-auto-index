@@ -1,0 +1,2 @@
+zotero-auto-index
+=================
