@@ -13,8 +13,8 @@
 	<menupopup id="zotero-tb-actions-popup">
 		<!-- Make sure the menu separator for utilities is visible -->
 		<menuseparator id="zotero-tb-actions-plugins-separator" hidden="false"/>
-		<menuitem insertbefore="zotero-tb-actions-separator" label="zotero-auto-index.name;"
-			oncommand="Zotero.AutoIndex.insertAutoIndex()"/>
+		<menuitem insertbefore="zotero-tb-actions-separator" label="&zotero-auto-index.update;"
+			oncommand="Zotero.AutoIndex.update()"/>
 	</menupopup>
 	
 	<!-- Include the main extension logic -->
