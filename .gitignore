@@ -1,0 +1,6 @@
+Gemfile.lock
+*.pdf
+/*~
+*.*~
+*.epub
+*.swp
