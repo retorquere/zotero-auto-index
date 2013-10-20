@@ -8,7 +8,7 @@ Zotero.AutoIndex = {
       regex: /[\u07C0]/g
     }, {
       replacement: 'A', // alpha
-      regex: /[\u0391\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104\u023A\u2C6F]/g
+      regex: /[\u0410\u0391\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104\u023A\u2C6F]/g
     }, {
       replacement: 'AA',
       regex: /[\uA732]/g
@@ -59,7 +59,7 @@ Zotero.AutoIndex = {
       regex: /[\u0397\u0048\u24BD\uFF28\u0124\u1E22\u1E26\u021E\u1E24\u1E28\u1E2A\u0126\u2C67\u2C75\uA78D]/g
     }, {
       replacement: 'I',
-      regex: /[\x49\u24BE\uFF29\xCC\xCD\xCE\u0128\u012A\u012C\u0130\xCF\u1E2E\u1EC8\u01CF\u0208\u020A\u1ECA\u012E\u1E2C\u0197]/g
+      regex: /[\u026A\x49\u24BE\uFF29\xCC\xCD\xCE\u0128\u012A\u012C\u0130\xCF\u1E2E\u1EC8\u01CF\u0208\u020A\u1ECA\u012E\u1E2C\u0197]/g
     }, {
       replacement: 'J',
       regex: /[\x4A\u24BF\uFF2A\u0134\u0248\u0237]/g
@@ -170,7 +170,7 @@ Zotero.AutoIndex = {
       regex: /[\u03B2\u0062\u24D1\uFF42\u1E03\u1E05\u1E07\u0180\u0183\u0253\u0182]/g
     }, {
       replacement: 'c',
-      regex: /[\u0063\u24D2\u0107\u0109\u010B\u010D\u00E7\u1E09\u0188\u023C\uA73F\u2184\u0043\u0106\u0108\u010A\u010C\u00C7\u0187\u023B]/g
+      regex: /[\u0441\u0063\u24D2\u0107\u0109\u010B\u010D\u00E7\u1E09\u0188\u023C\uA73F\u2184\u0043\u0106\u0108\u010A\u010C\u00C7\u0187\u023B]/g
     }, {
       replacement: 'ch',
       regex: /[\u03C7]/g
@@ -185,7 +185,7 @@ Zotero.AutoIndex = {
       regex: /[\u01F3\u01C6]/g
     }, {
       replacement: 'e', //epsilon
-      regex: /[\u1F10\u1F73\u1f10\u1F15\u03B5\u03AD\u0065\u24D4\uFF45\u00E8\u00E9\u00EA\u1EC1\u1EBF\u1EC5\u1EC3\u1EBD\u0113\u1E15\u1E17\u0115\u0117\u00EB\u1EBB\u011B\u0205\u0207\u1EB9\u1EC7\u0229\u1E1D\u0119\u1E19\u1E1B\u0247\u01DD]/g
+      regex: /[\u0435\u1F10\u1F73\u1f10\u1F15\u03B5\u03AD\u0065\u24D4\uFF45\u00E8\u00E9\u00EA\u1EC1\u1EBF\u1EC5\u1EC3\u1EBD\u0113\u1E15\u1E17\u0115\u0117\u00EB\u1EBB\u011B\u0205\u0207\u1EB9\u1EC7\u0229\u1E1D\u0119\u1E19\u1E1B\u0247\u01DD]/g
     }, {
       replacement: 'f',
       regex: /[\u03D5\u03C6\u0066\u24D5\uFF46\u1E1F\u0192]/g
@@ -229,8 +229,8 @@ Zotero.AutoIndex = {
       replacement: 'lj',
       regex: /[\u01C9]/g
     }, {
-      replacement: 'm',
-      regex: /[\u03BC\x6D\u24DC\uFF4D\u1E3F\u1E41\u1E43\u0271\u026F]/g
+      replacement: 'm', // micro
+      regex: /[\u00B5\u043C\u03BC\x6D\u24DC\uFF4D\u1E3F\u1E41\u1E43\u0271\u026F]/g
     }, {
       replacement: 'n', // a.o. nu
       regex: /[\u03BD\x6E\u24DD\uFF4E\u01F9\u0144\xF1\u1E45\u0148\u1E47\u0146\u1E4B\u1E49\u019E\u0272\u0149\uA791\uA7A5\u043B\u0509]/g
@@ -239,7 +239,7 @@ Zotero.AutoIndex = {
       regex: /[\u01CC]/g
     }, {
       replacement: 'o', // omicron
-      regex: /[\u1F41\u1F45\u1F44\u1F79\u03BF\u03CC\u00BA\x6F\u24DE\uFF4F\xF2\xF3\xF4\u1ED3\u1ED1\u1ED7\u1ED5\xF5\u1E4D\u022D\u1E4F\u014D\u1E51\u1E53\u014F\u022F\u0231\xF6\u022B\u1ECF\u0151\u01D2\u020D\u020F\u01A1\u1EDD\u1EDB\u1EE1\u1EDF\u1EE3\u1ECD\u1ED9\u01EB\u01ED\xF8\u01FF\uA74B\uA74D\u0275\u0254\u1D11]/g
+      regex: /[\u043E\u1F41\u1F45\u1F44\u1F79\u03BF\u03CC\u00BA\x6F\u24DE\uFF4F\xF2\xF3\xF4\u1ED3\u1ED1\u1ED7\u1ED5\xF5\u1E4D\u022D\u1E4F\u014D\u1E51\u1E53\u014F\u022F\u0231\xF6\u022B\u1ECF\u0151\u01D2\u020D\u020F\u01A1\u1EDD\u1EDB\u1EE1\u1EDF\u1EE3\u1ECD\u1ED9\u01EB\u01ED\xF8\u01FF\uA74B\uA74D\u0275\u0254\u1D11]/g
     }, {
       replacement: 'oe',
       regex: /[\u0153]/g
@@ -275,7 +275,7 @@ Zotero.AutoIndex = {
       regex: /[\xDF]/g
     }, {
       replacement: 't',
-      regex: /[\u03B8\u03D1\u03C4\x74\u24E3\uFF54\u1E6B\u1E97\u0165\u1E6D\u021B\u0163\u1E71\u1E6F\u0167\u01AD\u0288\u2C66\uA787]/g
+      regex: /[\u0442\u03B8\u03D1\u03C4\x74\u24E3\uFF54\u1E6B\u1E97\u0165\u1E6D\u021B\u0163\u1E71\u1E6F\u0167\u01AD\u0288\u2C66\uA787]/g
     }, {
       replacement: 'th',
       regex: /[\u00FE]/g
@@ -284,7 +284,7 @@ Zotero.AutoIndex = {
       regex: /[\uA729]/g
     }, {
       replacement: 'u', // upsilon
-      regex: /[\u1F50\u1F55\u1F7B\u1FE6\u03C5\u03C7\x75\u24E4\uFF55\xF9\xFA\xFB\u0169\u1E79\u016B\u1E7B\u016D\xFC\u01DC\u01D8\u01D6\u01DA\u1EE7\u016F\u0171\u01D4\u0215\u0217\u01B0\u1EEB\u1EE9\u1EEF\u1EED\u1EF1\u1EE5\u1E73\u0173\u1E77\u1E75\u0289]/g
+      regex: /[\u03CD\u1F50\u1F55\u1F7B\u1FE6\u03C5\u03C7\x75\u24E4\uFF55\xF9\xFA\xFB\u0169\u1E79\u016B\u1E7B\u016D\xFC\u01DC\u01D8\u01D6\u01DA\u1EE7\u016F\u0171\u01D4\u0215\u0217\u01B0\u1EEB\u1EE9\u1EEF\u1EED\u1EF1\u1EE5\u1E73\u0173\u1E77\u1E75\u0289]/g
     }, {
       replacement: 'v',
       regex: /[\x76\u24E5\uFF56\u1E7D\u1E7F\u028B\uA75F\u028C]/g
@@ -492,16 +492,20 @@ Zotero.AutoIndex = {
 
           let words = this.semanticSplitter(text, charset);
 
-          self.log('Item ' + itemID + ' has ' + words.length + ' words');
+          if (words) {
+            self.log('Item ' + itemID + ' has ' + words.length + ' words');
 
-          Zotero.DB.beginTransaction();
+            Zotero.DB.beginTransaction();
 
-          this.clearItemWords(itemID, true);
-          this.indexWords(itemID, words);
+            this.clearItemWords(itemID, true);
+            this.indexWords(itemID, words);
 
-          Zotero.DB.commitTransaction();
+            Zotero.DB.commitTransaction();
+          } else {
+            self.log('nothing to do');
+          }
         } catch (err) {
-          self.log(err);
+          self.log('indexString: ' +  err + "\n" + err.stack);
         } finally {
           Zotero.UnresponsiveScriptIndicator.enable();
         }
@@ -567,7 +571,8 @@ Zotero.AutoIndex = {
       if (item.isAttachment()) { continue; }
       if (checksum[item.id] == this.zotFileCheckSum(item)) { continue; }
       Zotero.ZotFile.pdfAnnotations.getAnnotations([item.id]);
-      if (--limit < 0) { break; }
+      limit--;
+      if (limit < 0) { break; }
     }
   },
 
