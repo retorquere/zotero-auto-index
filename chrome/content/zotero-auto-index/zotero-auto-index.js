@@ -376,9 +376,13 @@ Zotero.AutoIndex = {
   },
 
   logging: true,
-  log: function(msg) {
+  log: function(msg, e) {
     if (!this.logging) { return; }
     msg = '[' + this.DBNAME + '] ' + msg;
+    if (e) {
+      msg += "\nan error occurred: " + e.name + ": " + e.message + " \n(" + e.fileName + ", " + e.lineNumber + ")";
+      if (e.stack) { msg += "\n" + e.stack; }
+    }
     Zotero.debug(msg);
     console.log(msg);
   },
@@ -392,7 +396,7 @@ Zotero.AutoIndex = {
 
     let db = new Zotero.DBConnection(this.DBNAME);
     db.query('CREATE TABLE IF NOT EXISTS fulltextwords (word NOT NULL)');
-    db.query('CREATE TABLE IF NOT EXISTS annotations (itemID PRIMARY KEY, checksum NOT NULL)');
+    db.query('CREATE TABLE IF NOT EXISTS annotations (itemID PRIMARY KEY, checksum NOT NULL, noteID)');
     db.closeDatabase();
     Zotero.DB.query("ATTACH '" + Zotero.getZoteroDatabase(this.DBNAME).path + "' AS 'autoindex'");
     this.log(this.DBNAME + ' attached');
@@ -457,7 +461,7 @@ Zotero.AutoIndex = {
         try {
           if (charset && charset != 'utf-8') { text = self.decoder.convertStringToUTF8(text,charset,true); }
         } catch (err) {
-          self.log('charset conversion failed: ' + err);
+          self.log('charset conversion failed', err);
         }
 
         let words = {};
@@ -505,7 +509,7 @@ Zotero.AutoIndex = {
             self.log('nothing to do');
           }
         } catch (err) {
-          self.log('indexString: ' +  err + "\n" + err.stack);
+          self.log('indexString', err);
         } finally {
           Zotero.UnresponsiveScriptIndicator.enable();
         }
@@ -521,7 +525,7 @@ Zotero.AutoIndex = {
         try {
           return original.apply(this, [file, mimeType, charset, itemID, false, isCacheFile]);
         } catch (err) {
-          self.log('indexFile failed: ' + err);
+          self.log('indexFile failed: ', err);
         }
       }
     })(this, Zotero.Fulltext.indexFile);
@@ -540,20 +544,44 @@ Zotero.AutoIndex = {
 
     Zotero.ZotFile.createNote = (function (self, original) {
       return function (annotations, item, att, method) {
-        // new checksum for master item
-        Zotero.DB.query('REPLACE INTO autoindex.annotations (itemID, checksum) VALUES (?,?)', [item.id, self.zotFileCheckSum(item)]);
+        let oldnote = null;
+        let oldnotes = [];
+        let newnote = null;
 
-        // trash previously extracted notes
-        let attachments = item.getAttachments();
-        Zotero.Items.trash(Zotero.DB.columnQuery('SELECT itemID from autoindex.annotations WHERE itemID in (' + ['?' for (att of attachments)].join(',') + ')', attachments));
+        self.log('createNote started');
+
+        try {
+          // fetch previously extracted notes
+          oldnotes = (item.getNotes() || []);
+          if (oldnotes.size > 0) {
+            oldnote = Zotero.DB.valueQuery('SELECT itemID from autoindex.annotations WHERE itemID = ? AND noteID in (' + ['?' for (note of oldnotes)].join(',') + ')', oldnotes);
+          }
+        } catch (err) {
+          self.log('createNote', err);
+          oldnotes = [];
+          oldnote = null;
+        }
 
         // create the new extraction
         let result = original.apply(this, arguments);
 
-        for (note of item.getAttachments().filter(function(i) {return !(attachments.indexOf(i) > -1);})) {
-          note = Zotero.Item.get(note);
-          Zotero.DB.query('REPLACE INTO autoindex.annotations (itemID, checksum) VALUES (?,?)', [note.id, self.zotFileCheckSum(note)]);
+        try {
+          newnote = (item.getNotes() || []).filter(function(i) {return !(oldnotes.indexOf(i) > -1);} )[0];
+          if (newnote) {
+            if (oldnote) { Zotero.Items.trash([oldnote]); }
+          } else {
+            newnote = oldnote;
+          }
+          if (!newnote) { newnote = null; }
+
+          // new checksum for master item
+          Zotero.DB.query('REPLACE INTO autoindex.annotations (itemID, checksum, noteID) VALUES (?,?,?)', [item.id, self.zotFileCheckSum(item), newnote]);
+        } catch (err) {
+          self.log('createNote', err);
         }
+
+        self.log('createNote done');
+        return result;
       }
     })(this, Zotero.ZotFile.createNote);
 
@@ -561,36 +589,50 @@ Zotero.AutoIndex = {
   },
 
   zotFileUpdateAnnotations: function() {
+    this.log('zotFileUpdateAnnotations started');
+    this.log('initZotfile: ' + this.initZotfile());
     if (!this.initZotfile()) { return false; }
+    this.log('initZotfile true, proceeding');
 
     let checksum = {};
     for (row of (Zotero.DB.query('SELECT itemID, checksum FROM autoindex.annotations') || [])) { checksum[row.itemID] = row.checksum; }
+    this.log(JSON.stringify(checksum));
 
-    let limit = this.BULKLIMIT;
-    for (item of Zotero.Items.getAll()) {
-      if (item.isAttachment()) { continue; }
-      if (checksum[item.id] == this.zotFileCheckSum(item)) { continue; }
-      Zotero.ZotFile.pdfAnnotations.getAnnotations([item.id]);
-      limit--;
-      if (limit < 0) { break; }
+    let items = [item for (item of (Zotero.Items.getAll() || [])) if (!(item.isNote() || item.isAttachment()))];
+    items = items.splice(0, this.BULKLIMIT);
+    this.log('processing ' + items.length + ' items');
+
+    for (item of items) {
+      try {
+        if (checksum[item.id] === this.zotFileCheckSum(item)) { continue; }
+      } catch (err) {
+        this.log('no checksum for ' + item.id, err);
+        continue;
+      }
+
+      this.log('zotFileUpdateAnnotations: checksum mismatch for ' + item.id);
+      try {
+        Zotero.ZotFile.pdfAnnotations.getAnnotations(item.getAttachments());
+      } catch (err) {
+        this.log('Zotero.ZotFile.pdfAnnotations.getAnnotations', err);
+        continue;
+      }
+      this.log('zotFileUpdateAnnotations: updated ' + item.id);
     }
   },
 
   zotFileCheckSum: function(item) {
-    if (item.isAttachment) {
-      return item.key + '=' + item.attachmentModificationTime;
-    } else {
-      let attachments = [Zotero.Item.get(id) for (id of item.getAttachments())];
-      attachments.sort(function(a, b) { return (a.key == b.key ? 0 : (a.key < b.key ? -1 : 1));});
-      return [att.key + '=' + att.attachmentModificationTime for (att of attachments)].join('/');
-    }
+    if (item.isAttachment() || item.isNote()) { throw "checksum requested for note or attachment"; }
+    let attachments = [Zotero.Items.get(id) for (id of item.getAttachments())];
+    attachments.sort(function(a, b) { return (a.key == b.key ? 0 : (a.key < b.key ? -1 : 1));});
+    return [att.key + '=' + att.attachmentModificationTime for (att of attachments)].join('/');
   },
 
   reindexItem: function(item) {
     try {
       this.reindex(item.id);
     } catch (err) {
-      this.log(err);
+      this.log('reindex', err);
     }
   },
 
@@ -634,12 +676,19 @@ Zotero.AutoIndex = {
 
   update: function() {
     this.log('updating max ' + this.BULKLIMIT);
+
     try {
       this.zotFileUpdateAnnotations();
+    } catch (err) {
+      this.log('update zotFileAnnotations', err);
+    }
+
+    try {
       this.rebuildIndex(true);
     } catch (err) {
-      this.log('update: ' + err);
+      this.log('update index', err);
     }
+
     this.log('update done');
   }
 
