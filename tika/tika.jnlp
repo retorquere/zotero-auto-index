@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<jnlp spec="1.0+" codebase="http://localhost:8080/" href="tika.jnlp">
+	<information>
+		<title>Jnlp Testing</title>
+		<vendor>YONG MOOK KIM</vendor>
+		<homepage href="http://localhost:8080/" />
+		<description>Testing Testing</description>
+	</information>
+	<security>
+		<all-permissions/>
+	</security>
+	<resources>
+		<j2se version="1.6+" />
+		<jar href="tika-server-1.4.jar" />
+	</resources>
+	<application-desc main-class="org.apache.tika.server.TikaServerCli" />
+</jnlp>

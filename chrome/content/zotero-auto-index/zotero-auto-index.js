@@ -375,9 +375,8 @@ Zotero.AutoIndex = {
     return Object.keys(expanded);
   },
 
-  logging: true,
   log: function(msg, e) {
-    if (!this.logging) { return; }
+    if (!this.prefs.getBoolPref('debug')) { return; }
     msg = '[' + this.DBNAME + '] ' + msg;
     if (e) {
       msg += "\nan error occurred: " + e.name + ": " + e.message + " \n(" + e.fileName + ", " + e.lineNumber + ")";
@@ -388,10 +387,12 @@ Zotero.AutoIndex = {
   },
 
   DBNAME: 'zotero-auto-index',
-  BULKLIMIT: 50,
   decoder: Components.classes["@mozilla.org/intl/utf8converterservice;1"].getService(Components.interfaces.nsIUTF8ConverterService),
+  prefs: null,
 
   init: function () {
+    if (!this.prefs) { this.prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.zotero-auto-index."); }
+
     this.unicode.Letter = new RegExp('[' + this.unicode.Lu.source + this.unicode.Ll.source + this.unicode.Lt.source + this.unicode.Lo.source + ']');
 
     let db = new Zotero.DBConnection(this.DBNAME);
@@ -435,7 +436,7 @@ Zotero.AutoIndex = {
         Zotero.DB.query("DELETE FROM autoindex.fulltextwords");
         words = self.expandWordList(words);
         while (words.length > 0) {
-          chunk = words.splice(0,self.BULKLIMIT);
+          chunk = words.splice(0, 100);
           Zotero.DB.query('INSERT INTO autoindex.fulltextwords (word) ' + ['SELECT ?' for (word of chunk)].join(' UNION '), chunk);
         }
         Zotero.DB.query('INSERT INTO fulltextWords (word) SELECT DISTINCT word FROM autoindex.fulltextwords WHERE length(word) > 1 EXCEPT SELECT word FROM fulltextWords');
@@ -530,102 +531,74 @@ Zotero.AutoIndex = {
       }
     })(this, Zotero.Fulltext.indexFile);
 
+    if (this.prefs.getBoolPref('zotfile.enabled')) {
+      Zotero.ZotFile.pdfAnnotations.createNote = (function (self, original) {
+        return function (annotations, item, att, method) {
+          let oldnote = null;
+          let oldnotes = [];
+          let newnote = null;
+
+          self.log('createNote started');
+
+          try {
+            // fetch previously extracted notes
+            oldnotes = (item.getNotes() || []);
+            if (oldnotes.size > 0) {
+              oldnote = Zotero.DB.valueQuery('SELECT noteID from autoindex.annotations WHERE itemID = ? AND noteID in (' + ['?' for (note of oldnotes)].join(',') + ')', [att.id] + oldnotes);
+            }
+          } catch (err) {
+            self.log('createNote', err);
+            oldnotes = [];
+            oldnote = null;
+          }
+
+          // create the new extraction
+          let result = original.apply(this, arguments);
+
+          try {
+            newnote = (item.getNotes() || []).filter(function(i) {return !(oldnotes.indexOf(i) > -1);} )[0];
+            if (newnote) {
+              if (oldnote) { Zotero.Items.trash([oldnote]); }
+            } else {
+              newnote = oldnote;
+            }
+            if (!newnote) { newnote = null; }
+
+            self.log('createNote:' + att.id + ',' + att.attachmentModificationTime + ',' + newnote);
+            Zotero.DB.query('REPLACE INTO autoindex.annotations (itemID, checksum, noteID) VALUES (?,?,?)', [att.id, att.attachmentModificationTime, newnote]);
+          } catch (err) {
+            self.log('createNote', err);
+          }
+
+          self.log('createNote done');
+          return result;
+        }
+      })(this, Zotero.ZotFile.pdfAnnotations.createNote);
+    }
 
     let notifierID = Zotero.Notifier.registerObserver(this.notifierCallback, ['item']);
     // Unregister callback when the window closes (important to avoid a memory leak)
     window.addEventListener('unload', function(e) { Zotero.Notifier.unregisterObserver(notifierID); }, false);
   },
 
-  zotFileInitialized: false,
-  initZotfile: function() {
-    if (this.zotFileInitialized) { return !!Zotero.ZotFile; }
-    this.zotFileInitialized = true;
-    if (!Zotero.ZotFile) { return false; }
-
-    Zotero.ZotFile.createNote = (function (self, original) {
-      return function (annotations, item, att, method) {
-        let oldnote = null;
-        let oldnotes = [];
-        let newnote = null;
-
-        self.log('createNote started');
-
-        try {
-          // fetch previously extracted notes
-          oldnotes = (item.getNotes() || []);
-          if (oldnotes.size > 0) {
-            oldnote = Zotero.DB.valueQuery('SELECT itemID from autoindex.annotations WHERE itemID = ? AND noteID in (' + ['?' for (note of oldnotes)].join(',') + ')', oldnotes);
-          }
-        } catch (err) {
-          self.log('createNote', err);
-          oldnotes = [];
-          oldnote = null;
-        }
-
-        // create the new extraction
-        let result = original.apply(this, arguments);
-
-        try {
-          newnote = (item.getNotes() || []).filter(function(i) {return !(oldnotes.indexOf(i) > -1);} )[0];
-          if (newnote) {
-            if (oldnote) { Zotero.Items.trash([oldnote]); }
-          } else {
-            newnote = oldnote;
-          }
-          if (!newnote) { newnote = null; }
-
-          // new checksum for master item
-          Zotero.DB.query('REPLACE INTO autoindex.annotations (itemID, checksum, noteID) VALUES (?,?,?)', [item.id, self.zotFileCheckSum(item), newnote]);
-        } catch (err) {
-          self.log('createNote', err);
-        }
-
-        self.log('createNote done');
-        return result;
-      }
-    })(this, Zotero.ZotFile.createNote);
-
-    return true;
-  },
-
   zotFileUpdateAnnotations: function() {
+    if (!this.prefs.getBoolPref('zotfile.enabled')) { return; }
     this.log('zotFileUpdateAnnotations started');
-    this.log('initZotfile: ' + this.initZotfile());
-    if (!this.initZotfile()) { return false; }
-    this.log('initZotfile true, proceeding');
 
     let checksum = {};
     for (row of (Zotero.DB.query('SELECT itemID, checksum FROM autoindex.annotations') || [])) { checksum[row.itemID] = row.checksum; }
     this.log(JSON.stringify(checksum));
 
-    let items = [item for (item of (Zotero.Items.getAll() || [])) if (!(item.isNote() || item.isAttachment()))];
-    items = items.splice(0, this.BULKLIMIT);
-    this.log('processing ' + items.length + ' items');
+    let items = [item.id for (item of (Zotero.Items.getAll() || [])) if (item.isAttachment() && checksum[item.id] != item.attachmentModificationTime)];
+    items = items.splice(0, this.prefs.getIntPref('zotfile.batch'));
+    this.log('processing ' + JSON.stringify(items));
 
-    for (item of items) {
-      try {
-        if (checksum[item.id] === this.zotFileCheckSum(item)) { continue; }
-      } catch (err) {
-        this.log('no checksum for ' + item.id, err);
-        continue;
-      }
-
-      this.log('zotFileUpdateAnnotations: checksum mismatch for ' + item.id);
-      try {
-        Zotero.ZotFile.pdfAnnotations.getAnnotations(item.getAttachments());
-      } catch (err) {
-        this.log('Zotero.ZotFile.pdfAnnotations.getAnnotations', err);
-        continue;
-      }
-      this.log('zotFileUpdateAnnotations: updated ' + item.id);
+    try {
+      Zotero.ZotFile.pdfAnnotations.getAnnotations(items);
+    } catch (err) {
+      this.log('Zotero.ZotFile.pdfAnnotations.getAnnotations', err);
     }
-  },
-
-  zotFileCheckSum: function(item) {
-    if (item.isAttachment() || item.isNote()) { throw "checksum requested for note or attachment"; }
-    let attachments = [Zotero.Items.get(id) for (id of item.getAttachments())];
-    attachments.sort(function(a, b) { return (a.key == b.key ? 0 : (a.key < b.key ? -1 : 1));});
-    return [att.key + '=' + att.attachmentModificationTime for (att of attachments)].join('/');
+    this.log('zotFileUpdateAnnotations: updated');
   },
 
   reindexItem: function(item) {
@@ -665,7 +638,7 @@ Zotero.AutoIndex = {
         + "WHERE indexedChars IS NOT NULL OR indexedPages IS NOT NULL)";
     var items = Zotero.DB.columnQuery(sql);
     if (items && items.length > 0) {
-      items = items.splice(0,this.BULKLIMIT);
+      items = items.splice(0, this.prefs.getIntPref('index.batch'));
       this.log('rebuilding ' + items.length + items);
       Zotero.DB.query("DELETE FROM fulltextItemWords WHERE itemID IN (" + ['?' for (p of items)].join(',') + ")", items);
       Zotero.DB.query("DELETE FROM fulltextItems WHERE itemID IN (" + ['?' for (p of items)].join(',') + ")", items);
@@ -675,7 +648,7 @@ Zotero.AutoIndex = {
   },
 
   update: function() {
-    this.log('updating max ' + this.BULKLIMIT);
+    this.log('updating');
 
     try {
       this.zotFileUpdateAnnotations();

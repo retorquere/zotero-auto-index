@@ -5,7 +5,12 @@ require 'nokogiri'
 EXTENSION_ID = Nokogiri::XML(File.open('install.rdf')).at('//em:id').inner_text
 EXTENSION = EXTENSION_ID.gsub(/@.*/, '')
 RELEASE = Nokogiri::XML(File.open('install.rdf')).at('//em:version').inner_text
-SOURCES = %w{chrome resources chrome.manifest install.rdf bootstrap.js}.collect{|f| File.directory?(f) ?  Dir["#{f}/**/*"] : f}.flatten.select{|f| File.file?(f)}.collect{|f| f =~ /\.coffee$/i ? f.gsub(/\.coffee$/i, '.js') : f}
+SOURCES = %w{chrome resources defaults chrome.manifest install.rdf bootstrap.js}
+            .collect{|f| File.directory?(f) ?  Dir["#{f}/**/*"] : f}.flatten
+            .select{|f| File.file?(f)}
+            .reject{|f| f =~ /[~]$/ || f =~ /\.swp$/}
+            .collect{|f| f =~ /\.coffee$/i ? f.gsub(/\.coffee$/i, '.js') : f}
+
 XPI = "zotero-#{EXTENSION}-#{RELEASE}.xpi"
 
 task :default => XPI do
@@ -17,8 +22,7 @@ end
 
 file XPI => SOURCES do
   Dir['*.xpi'].each{|xpi| File.unlink(xpi)}
-  sources = SOURCES.collect{|f| f.gsub(/\/.*/, '')}.uniq.join(' ')
-  sh "zip -r #{XPI} #{sources}"
+  sh "zip -r #{XPI} #{SOURCES.join(' ')}"
 end
 
 file 'update.rdf' => [XPI, 'install.rdf'] do
