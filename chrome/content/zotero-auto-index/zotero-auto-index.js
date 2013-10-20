@@ -533,7 +533,7 @@ Zotero.AutoIndex = {
     if (this.prefs.getBoolPref('zotfile.enabled')) {
       Zotero.ZotFile.pdfAnnotations.getNoteContent = (function (self, original) {
         return function (annotations, item, att, method) {
-          return original.apply(this, arguments) + '<!-- ' + JSON.stringify({source: 'zotfile', attachment: att.id, timestamp: att.attachmentModificationTime}) + ' -->';
+          return original.apply(this, arguments) + '<!-- ' + JSON.stringify({zotfile: {}}) + ' -->';
         }
       })(this, Zotero.ZotFile.pdfAnnotations.getNoteContent);
     }
@@ -551,7 +551,9 @@ Zotero.AutoIndex = {
     let discard = [];
     var note;
 
-    for (row of (Zotero.DB.query("SELECT itemID, note FROM itemNotes WHERE sourceItemID in (SELECT sourceItemID FROM itemNotes GROUP BY sourceItemID HAVING COUNT(sourceItemID) > 1)") || [])) {
+    // generate new notes for existing note datemodified < attachment date?
+
+    for (row of (Zotero.DB.query("SELECT itemID, sourceID, note FROM itemNotes JOIN items on items.itemID = itemNotes.itemID WHERE sourceItemID in (SELECT sourceItemID FROM itemNotes GROUP BY sourceItemID HAVING COUNT(sourceItemID) > 1)") || [])) {
       let metadata = row.note.match(/<!--(.*?)-->/);
       if (!metadata) { continue; }
       try {
@@ -560,13 +562,15 @@ Zotero.AutoIndex = {
         continue;
       }
       this.log('note: ' + JSON.stringify(note));
-      if (note.source != 'zotfile') { continue; }
+      if (!note.zotfile) { continue; }
       note.itemID = row.itemID;
+      note.modified = Zotero.Items.get(note.itemID).dateModified;
+      note.attachment = row.sourceID;
 
       if (!keep[note.attachment]) {
         keep[note.attachment] = note;
       } else {
-        if (keep[note.attachment].timestamp > note.timestamp) {
+        if (keep[note.attachment].modified > note.modified) {
           discard.push(note.itemID);
         } else {
           discard.push(keep[note.attachment].itemID);
