@@ -421,7 +421,7 @@ Zotero.AutoIndex = {
     Zotero.Sync.Runner.stop = (function (self, original) {
       return function (request) {
         let result = original.apply(this, arguments);
-        self.update();
+        self.update(1);
         return result;
       }
     })(this, Zotero.Sync.Runner.stop);
@@ -614,14 +614,15 @@ Zotero.AutoIndex = {
           Zotero.Zotfile.pdfAnnotations.getAnnotations(attachments);
         }
 
-        this.update();
+        this.update(1);
       }
     }
   },
 
-  rebuildIndex: function() {
+  rebuildIndex: function(howmany) {
     Zotero.DB.beginTransaction();
 
+    howmany = howmany || this.prefs.getIntPref('index.batch');
     // Get all attachments other than web links
     var sql = "SELECT itemID FROM itemAttachments WHERE linkMode!="
       + Zotero.Attachments.LINK_MODE_LINKED_URL;
@@ -629,7 +630,7 @@ Zotero.AutoIndex = {
         + "WHERE indexedChars IS NOT NULL OR indexedPages IS NOT NULL)";
     var items = Zotero.DB.columnQuery(sql);
     if (items && items.length > 0) {
-      items = items.splice(0, this.prefs.getIntPref('index.batch'));
+      items = items.splice(0, howmany);
       this.log('rebuilding ' + items.length + items);
       Zotero.DB.query("DELETE FROM fulltextItemWords WHERE itemID IN (" + ['?' for (p of items)].join(',') + ")", items);
       Zotero.DB.query("DELETE FROM fulltextItems WHERE itemID IN (" + ['?' for (p of items)].join(',') + ")", items);
@@ -638,17 +639,17 @@ Zotero.AutoIndex = {
     Zotero.DB.commitTransaction();
   },
 
-  update: function() {
+  update: function(howmany) {
     this.log('updating');
 
     try {
-      this.zotFileUpdateAnnotations();
+      this.zotFileUpdateAnnotations(howmany);
     } catch (err) {
       this.log('update zotFileAnnotations', err);
     }
 
     try {
-      this.rebuildIndex(true);
+      this.rebuildIndex(howmany);
     } catch (err) {
       this.log('update index', err);
     }
