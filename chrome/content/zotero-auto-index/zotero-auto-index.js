@@ -606,7 +606,7 @@ Zotero.AutoIndex = {
       if (event == 'add' || event == 'modify') {
         let attachments = [];
         for (item of Zotero.Items.get(ids)) {
-          this.reindexItem(item);
+          Zotero.AutoIndex.reindexItem(item);
           if (item.isAttachment()) {attachments.push(item.id);}
         }
 
