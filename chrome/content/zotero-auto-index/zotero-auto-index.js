@@ -1,4 +1,6 @@
 Zotero.AutoIndex = {
+  prefs: Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.zotero-auto-index."),
+
   diacriticsRemoval: [
     {
       replacement: ' ',
@@ -388,11 +390,8 @@ Zotero.AutoIndex = {
 
   DBNAME: 'zotero-auto-index',
   decoder: Components.classes["@mozilla.org/intl/utf8converterservice;1"].getService(Components.interfaces.nsIUTF8ConverterService),
-  prefs: null,
 
   init: function () {
-    if (!this.prefs) { this.prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.zotero-auto-index."); }
-
     this.unicode.Letter = new RegExp('[' + this.unicode.Lu.source + this.unicode.Ll.source + this.unicode.Lt.source + this.unicode.Lo.source + ']');
 
     let db = new Zotero.DBConnection(this.DBNAME);
