@@ -76,14 +76,14 @@ Zotero.Fulltext = new function(){
 	Zotero.DB.query('CREATE TABLE IF NOT EXISTS indexing.fulltextwords (word NOT NULL)');
 	this.decoder = Components.classes["@mozilla.org/intl/utf8converterservice;1"].getService(Components.interfaces.nsIUTF8ConverterService);
 
-	const kWbClassSpace =            0,
-	const kWbClassAlphaLetter =      1,
-	const kWbClassPunct =            2,
-	const kWbClassHanLetter =        3,
-	const kWbClassKatakanaLetter =   4,
-	const kWbClassHiraganaLetter =   5,
-	const kWbClassHWKatakanaLetter = 6,
-	const kWbClassThaiLetter =       7
+	const kWbClassSpace =            0;
+	const kWbClassAlphaLetter =      1;
+	const kWbClassPunct =            2;
+	const kWbClassHanLetter =        3;
+	const kWbClassKatakanaLetter =   4;
+	const kWbClassHiraganaLetter =   5;
+	const kWbClassHWKatakanaLetter = 6;
+	const kWbClassThaiLetter =       7;
 
 	var _pdfConverterVersion = null;
 	var _pdfConverterFileName = null;
