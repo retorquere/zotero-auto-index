@@ -72,10 +72,6 @@ Zotero.Fulltext = new function(){
 	const _processorCacheFile = '.zotero-ft-unprocessed';
 	
 
-	Zotero.DB.query("ATTACH ':memory:' AS 'indexing'");
-	Zotero.DB.query('CREATE TABLE IF NOT EXISTS indexing.fulltextwords (word NOT NULL)');
-	this.decoder = Components.classes["@mozilla.org/intl/utf8converterservice;1"].getService(Components.interfaces.nsIUTF8ConverterService);
-
 	const kWbClassSpace =            0;
 	const kWbClassAlphaLetter =      1;
 	const kWbClassPunct =            2;
@@ -105,12 +101,12 @@ Zotero.Fulltext = new function(){
 	
 	var self = this;
 	
-
-	this.decoder = Components.classes["@mozilla.org/intl/utf8converterservice;1"].getService(Components.interfaces.nsIUTF8ConverterService);
-
 	function init() {
 		Zotero.DB.query("ATTACH ':memory:' AS 'indexing'");
-		Zotero.DB.query('CREATE TABLE IF NOT EXISTS indexing.fulltextwords (word NOT NULL)');
+		Zotero.DB.query('CREATE TABLE indexing.fulltextWords (word NOT NULL)');
+
+		this.decoder = Components.classes["@mozilla.org/intl/utf8converterservice;1"].
+			getService(Components.interfaces.nsIUTF8ConverterService);
 
 		var platform = Zotero.platform.replace(' ', '-');
 		_pdfConverterFileName = this.pdfConverterName + '-' + platform;
@@ -120,7 +116,6 @@ Zotero.Fulltext = new function(){
 			_pdfInfoFileName += '.exe';
 		}
 		
-
 		this.__defineGetter__("pdfConverterFileName", function() { return _pdfConverterFileName; });
 		this.__defineGetter__("pdfConverterVersion", function() { return _pdfConverterVersion; });
 		this.__defineGetter__("pdfInfoFileName", function() { return _pdfInfoFileName; });
@@ -143,6 +138,9 @@ Zotero.Fulltext = new function(){
 	}
 	
 	
+	// this is a port from http://mxr.mozilla.org/mozilla-central/source/intl/lwbrk/src/nsSampleWordBreaker.cpp to
+	// Javascript to avoid the overhead of xpcom calls. The port keeps to the mozilla naming of interfaces/constants as
+	// closely as possible.
 	function getClass(c, cc) {
 		if (cc < 0x2E80) { //alphabetical script
 			if ((cc & 0xFF80) == 0) { // ascii
@@ -259,15 +257,16 @@ Zotero.Fulltext = new function(){
 	function indexWords(itemID, words) {
 		let chunk;
 		Zotero.DB.beginTransaction();
-		Zotero.DB.query("DELETE FROM indexing.fulltextwords");
+		Zotero.DB.query("DELETE FROM indexing.fulltextWords");
 		while (words.length > 0) {
 			chunk = words.splice(0, 100);
-			Zotero.DB.query('INSERT INTO indexing.fulltextwords (word) ' + ['SELECT ?' for (word of chunk)].join(' UNION '), chunk);
+			Zotero.DB.query('INSERT INTO indexing.fulltextWords (word) ' + ['SELECT ?' for (word of chunk)].join(' UNION '), chunk);
 		}
-		Zotero.DB.query('INSERT INTO fulltextWords (word) SELECT DISTINCT word FROM indexing.fulltextwords WHERE length(word) > 1 EXCEPT SELECT word FROM fulltextWords');
+		Zotero.DB.query('INSERT OR IGNORE INTO fulltextWords (word) SELECT word FROM indexing.fulltextWords WHERE length(word) > 1');
 		Zotero.DB.query('DELETE FROM fulltextItemWords WHERE itemID = ?', [itemID]);
-		Zotero.DB.query('INSERT INTO fulltextItemWords (wordID, itemID) SELECT DISTINCT wordID, ? FROM fulltextWords ftw JOIN indexing.fulltextwords aftw ON aftw.word = ftw.word', [itemID]);
+		Zotero.DB.query('INSERT INTO fulltextItemWords (wordID, itemID) SELECT wordID, ? FROM fulltextWords JOIN indexing.fulltextWords USING(word)', [itemID]);
 		Zotero.DB.query("REPLACE INTO fulltextItems (itemID, version) VALUES (?,?)", [itemID, 0]);
+		Zotero.DB.query("DELETE FROM indexing.fulltextWords");
 	
 		Zotero.DB.commitTransaction();
 		return true;
@@ -923,16 +922,6 @@ Zotero.Fulltext = new function(){
 			.then(function (json) {
 				data = JSON.parse(json);
 				
-				// TEMP: until we replace nsISemanticUnitScanner
-				if (data.text.length > 250000) {
-					let item = Zotero.Items.get(itemID);
-					Zotero.debug("Skipping processing of full-text content for item "
-						+ item.libraryKey + " with length " + data.text.length
-						+ " -- will be processed in future version", 2);
-					_processorBlacklist[itemID] = true;
-					return false;
-				}
-				
 				// Write the text content to the regular cache file
 				cacheFile = self.getItemCacheFile(itemID);
 				
@@ -1539,9 +1528,11 @@ Zotero.Fulltext = new function(){
 			Zotero.debug('No text to index');
 			return;
 		}
-		
+
 		try {
-			if (charset && charset != 'utf-8') { text = this.decoder.convertStringToUTF8(text,charset,true); }
+			if (charset && charset != 'utf-8') {
+				text = this.decoder.convertStringToUTF8(text, charset, true);
+			}
 		} catch (err) {
 			Zotero.debug(e, 1);
 		}
@@ -1552,7 +1543,7 @@ Zotero.Fulltext = new function(){
 		var strlen = text.length;
 		for (var i = 0; i < strlen; i++) {
 			var c = text.charAt(i);
-			var cc = this.getClass(c, text.charCodeAt(i));
+			var cc = getClass(c, text.charCodeAt(i));
 			
 			if (cc == kWbClassSpace || cc == kWbClassPunct) {
 				if (word != '') { words[word] = true; word = ''; }
@@ -1560,7 +1551,7 @@ Zotero.Fulltext = new function(){
 				if (word != '') { words[word] = true; word = ''; }
 				words[c] = true;
 			} else if (cc == cclass) {
-				word += '';
+				word += c;
 			} else {
 				if (word != '') { words[word] = true; }
 				word = c;
@@ -1568,7 +1559,7 @@ Zotero.Fulltext = new function(){
 			cclass = cc;
 		}
 		if (word != '') { words[word] = true; }
-		
+
 		return Object.keys(words);
 	}
 	

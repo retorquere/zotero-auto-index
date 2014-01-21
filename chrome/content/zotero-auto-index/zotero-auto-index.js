@@ -67,7 +67,12 @@ Zotero.AutoIndex = {
     // monkey-patch indexWords to add ASCII alternatives
     Zotero.Fulltext.indexWords = (function (self, original) {
       return function (itemID, words) {
-        return original.apply(this, [itemID, self.expandWordList(words)]);
+        try {
+          Zotero.AutoIndex.log('indexWords started');
+          return original.apply(this, [itemID, self.expandWordList(words)]);
+        } finally {
+          Zotero.AutoIndex.log('indexWords done');
+        }
       }
     })(this, Zotero.Fulltext.indexWords);
 
