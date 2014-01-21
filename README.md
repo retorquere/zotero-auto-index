@@ -1,6 +1,8 @@
 zotero-auto-index
 =================
 
+Install by downloading the [latest version](https://raw.github.com/friflaj/zotero-auto-index/master/zotero-auto-index-0.0.20.xpi).
+
 Automatically keeps your attachments indexed.
 
 This plugin replaces the standard Zotero tokenizer with one that is several orders of magnitude faster (a 13MB PDF that
@@ -25,4 +27,15 @@ off a new batch by choosing the 'Refresh full-text index' option from the gear m
 as the "rebuild index" option from the Zotero preferences menu, except that that rebuild does everything in one fell
 swoop, and my (too large) collection causes Firefox to die during the rebuild. The 'Refresh' option can be triggered
 multiple times, and won't do anything once your entire collection is indexed.
+
+# Support - read carefully
+
+My time is extremely limited for a number of very great reasons (you shall have to trust me on this). Because of this, I
+cannot accept bug reports
+or support requests on anything but the latest version, currently at **0.0.20**. If you submit an issue report,
+please include the version that you are on. By the time I get to your issue, the latest version might have bumped up
+already, and you
+will have to upgrade (you might have auto-upgraded already however) and re-verify that your issue still exists.
+Apologies for the inconvenience, but such
+are the breaks.
 
