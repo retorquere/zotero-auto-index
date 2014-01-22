@@ -147,7 +147,7 @@ Zotero.Fulltext = new function(){
 				if (c == ' '  || c == "\t" || c == "\r" || c == "\n") { return kWbClassSpace; }
 
 				// deviation from Mozilla algorithm: count "'" as an alphaletter
-				if (c == "'" || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) { return kWbClassAlphaLetter; }
+				if (c == "'" || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) { return kWbClassAlphaLetter; }
 				return kWbClassPunct;
 			}
 			if ((0xFF80 & cc) == 0x0E00) { return kWbClassThaiLetter; }
@@ -262,7 +262,7 @@ Zotero.Fulltext = new function(){
 			chunk = words.splice(0, 100);
 			Zotero.DB.query('INSERT INTO indexing.fulltextWords (word) ' + ['SELECT ?' for (word of chunk)].join(' UNION '), chunk);
 		}
-		Zotero.DB.query('INSERT OR IGNORE INTO fulltextWords (word) SELECT word FROM indexing.fulltextWords WHERE length(word) > 1');
+		Zotero.DB.query('INSERT OR IGNORE INTO fulltextWords (word) SELECT word FROM indexing.fulltextWords');
 		Zotero.DB.query('DELETE FROM fulltextItemWords WHERE itemID = ?', [itemID]);
 		Zotero.DB.query('INSERT INTO fulltextItemWords (wordID, itemID) SELECT wordID, ? FROM fulltextWords JOIN indexing.fulltextWords USING(word)', [itemID]);
 		Zotero.DB.query("REPLACE INTO fulltextItems (itemID, version) VALUES (?,?)", [itemID, 0]);
@@ -1534,7 +1534,7 @@ Zotero.Fulltext = new function(){
 				text = this.decoder.convertStringToUTF8(text, charset, true);
 			}
 		} catch (err) {
-			Zotero.debug(e, 1);
+			Zotero.debug(err, 1);
 		}
 		
 		var words = {};
@@ -1551,10 +1551,10 @@ Zotero.Fulltext = new function(){
 				if (word != '') { words[word] = true; word = ''; }
 				words[c] = true;
 			} else if (cc == cclass) {
-				word += c;
+				word += c.toLowerCase();
 			} else {
 				if (word != '') { words[word] = true; }
-				word = c;
+				word = c.toLowerCase();
 			}
 			cclass = cc;
 		}
