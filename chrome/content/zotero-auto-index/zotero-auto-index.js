@@ -6,7 +6,7 @@ Zotero.AutoIndex = {
 
     // stash words in a dictiionary to make them unique
     for (var word of words) {
-      expanded[word.loLowerCase()] = true;
+      expanded[word.toLowerCase()] = true;
       word = Zotero.Utilities.removeDiacritics(word, false).toLowerCase();
       if (word.match(/^[\x20-\x7f]+$/)) { expanded[word] = true; }
     }
