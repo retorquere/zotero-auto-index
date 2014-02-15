@@ -25,6 +25,10 @@ Zotero.AutoIndex = {
     console.log(msg);
   },
 
+  zotfileEnabled: function() {
+    return (Zotero.ZotFile && Zotero.AutoIndex.prefs.getBoolPref('zotfile.enabled'));
+  },
+
   init: function () {
     // monkey-patch Zotero.Sync.Storage.Mode to cause uploaded/downloaded files to be marked for re-indexing
     Zotero.Sync.Storage.Mode.prototype.uploadFile = (function (self, original) {
@@ -76,7 +80,7 @@ Zotero.AutoIndex = {
       }
     })(this, Zotero.Fulltext.indexWords);
 
-    if (Zotero.AutoIndex.prefs.getBoolPref('zotfile.enabled')) {
+    if (Zotero.AutoIndex.zotfileEnabled()) {
       Zotero.ZotFile.pdfAnnotations.getNoteContent = (function (self, original) {
         return function (annotations, item, att, method) {
           return original.apply(this, arguments) + '<!-- ' + JSON.stringify({zotfile: {}}) + ' -->';
@@ -90,7 +94,7 @@ Zotero.AutoIndex = {
   },
 
   zotFileUpdateAnnotations: function() {
-    if (!Zotero.AutoIndex.prefs.getBoolPref('zotfile.enabled')) { return; }
+    if (!Zotero.AutoIndex.zotfileEnabled()) { return; }
     Zotero.AutoIndex.log('zotFileUpdateAnnotations started');
 
     let keep = {};
@@ -156,7 +160,7 @@ Zotero.AutoIndex = {
           if (item.isAttachment()) {attachments.push(item.id);}
         }
 
-        if (Zotero.AutoIndex.prefs.getBoolPref('zotfile.enabled')) {
+        if (Zotero.AutoIndex.zotfileEnabled()) {
           Zotero.Zotfile.pdfAnnotations.getAnnotations(attachments);
         }
 
