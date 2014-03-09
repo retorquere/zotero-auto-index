@@ -161,7 +161,7 @@ Zotero.AutoIndex = {
         }
 
         if (Zotero.AutoIndex.zotfileEnabled()) {
-          Zotero.Zotfile.pdfAnnotations.getAnnotations(attachments);
+          Zotero.ZotFile.pdfAnnotations.getAnnotations(attachments);
         }
 
         Zotero.AutoIndex.update(1);
