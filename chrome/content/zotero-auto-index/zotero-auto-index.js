@@ -209,7 +209,4 @@ Zotero.AutoIndex = {
 };
 
 // Initialize the utility
-window.addEventListener('load', function(e) {
-  Zotero.Fulltext.init();
-  Zotero.AutoIndex.init();
-}, false);
+window.addEventListener('load', function(e) { Zotero.AutoIndex.init(); }, false);
