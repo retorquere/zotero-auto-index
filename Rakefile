@@ -66,3 +66,9 @@ task :release, :bump do |t, args|
   File.open('install.rdf','wb') {|f| install_rdf.write_xml_to f}
   puts "Release set to #{release}. Please publish."
 end
+
+task :test => XPI do
+  dropbox = File.expand_path('~/Dropbox')
+  Dir["#{dropbox}/*.xpi"].each{|xpi| File.unlink(xpi)}
+  FileUtils.cp(XPI, File.join(dropbox, XPI))
+end
