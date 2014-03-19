@@ -5,9 +5,9 @@ Install by downloading the [latest version](https://raw.github.com/friflaj/zoter
 
 Automatically keeps your attachments indexed.
 
-This plugin replaces the standard Zotero tokenizer with one that is several orders of magnitude faster (a 13MB PDF that
-Zotero had been plodding away on for 15 minutes when with no end in sight now indexes in under a minute), plus it adds
-ascii-ized search words in the index in addition to the words found in the PDF.
+The fast indexer that was added by this plugin is now part of Zotero 4.0.18 and later; if you installed the plugin only
+
+This plugin adds ascii-ized search words in the index in addition to the words found in the PDF.
 
 ## Zotfile integration
 
