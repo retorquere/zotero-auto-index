@@ -59,7 +59,6 @@ Zotero.AutoIndex = {
     // force all-pages indexing -- the replacement semanticSplitter is fast enough to handle it
     Zotero.Fulltext.indexFile = (function (self, original) {
       return function (file, mimeType, charset, itemID, complete, isCacheFile) {
-        Zotero.AutoIndex.log('indexFile(' + file.path + ',' + mimeType + ',' + charset + ',' + itemID + ',' + maxLength + ',' + isCacheFile + ')');
         try {
           return original.apply(this, [file, mimeType, charset, itemID, true, isCacheFile]);
         } catch (err) {

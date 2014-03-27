@@ -4,7 +4,7 @@
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>auto-index@iris-advies.com</em:id>
 		<em:name>Zotero Auto Index Plugin</em:name>
-		<em:version>0.0.27</em:version>
+		<em:version>0.0.28</em:version>
 		<em:description>Keep Zotero Index fresh automatically</em:description>
 		<em:creator>Emiliano Heyns</em:creator>
 		<em:updateURL>https://raw.github.com/friflaj/zotero-auto-index/master/update.rdf</em:updateURL>
