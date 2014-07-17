@@ -5,7 +5,7 @@ Install by downloading the [latest version](https://raw.github.com/ReichenHack/z
 
 Automatically keeps your attachments indexed.
 
-The fast indexer that was added by this plugin is now part of Zotero 4.0.18 and later; if you installed the plugin only
+The fast indexer that was added by this plugin is now part of Zotero 4.0.18 and later; if you installed the plugin only for the faster indexer, this plugin is superfluous for you.
 
 This plugin adds ascii-ized search words in the index in addition to the words found in the PDF.
 
