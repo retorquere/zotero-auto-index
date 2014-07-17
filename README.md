@@ -24,7 +24,7 @@ probably take a very long time, and Zotero/Firefox will freeze entirely while it
 cup of coffee, read that article you have been putting off, and sit it out. After this initial spike, indexing should be
 painless and automatic. Batches are currently limited to 50 attachments to not freeze Firefox for too long; you can kick
 off a new batch by choosing the 'Refresh full-text index' option from the gear menu. *In principle* this does the same
-as the "rebuild index" option from the Zotero preferences menu, except that that rebuild does everything in one fell
+as the "rebuild index" option from the Zotero preferences menu (Gear -&gt; Search -&gt; Rebuild Index...), except that that rebuild does everything in one fell
 swoop, and my (too large) collection causes Firefox to die during the rebuild. The 'Refresh' option can be triggered
 multiple times, and won't do anything once your entire collection is indexed.
 
