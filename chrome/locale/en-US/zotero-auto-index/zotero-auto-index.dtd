@@ -1,1 +1,6 @@
+<!ENTITY zotero-auto-index.name "Auto-refresh full-text index and annotations">
 <!ENTITY zotero-auto-index.update "Refresh Full-Text index and annotations">
+<!ENTITY zotero.auto-index.index-pdfs "Re-index PDFs on change">
+<!ENTITY zotero.auto-index.extract-annotations "Extract PDF annotations on change (requires ZotFile)">
+<!ENTITY zotero.auto-index.delay "After PC has been idle for ">
+<!ENTITY zotero.auto-index.minutes "minutes">

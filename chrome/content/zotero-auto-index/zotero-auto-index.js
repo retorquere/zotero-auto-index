@@ -14,6 +14,16 @@ Zotero.AutoIndex = {
     return Object.keys(expanded);
   },
 
+  openPreferenceWindow: function (paneID, action) {
+    var io = {
+      pane: paneID,
+      action: action
+    };
+    window.openDialog('chrome://zotero-auto-index/content/options.xul',
+                      'zotero-auto-index-options',
+                      'chrome,titlebar,toolbar,centerscreen' + Zotero.Prefs.get('browser.preferences.instantApply', true) ? 'dialog=no' : 'modal',io);
+  },
+
   log: function(msg, e) {
     if (!Zotero.AutoIndex.prefs.getBoolPref('debug')) { return; }
     msg = '[indexing] ' + msg;
@@ -169,6 +179,8 @@ Zotero.AutoIndex = {
   },
 
   rebuildIndex: function(howmany) {
+    // TODO: kick off using setTimeout, check whether this timeout was actually the source (approximation for "user
+    // busy")
     Zotero.DB.beginTransaction();
 
     howmany = howmany || Zotero.AutoIndex.prefs.getIntPref('index.batch');
