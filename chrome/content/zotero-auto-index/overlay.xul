@@ -9,7 +9,7 @@
 		<stringbundle id="zotero-auto-index-strings" src="chrome://zotero-auto-index/locale/zotero-auto-index.properties"/>
 	</stringbundleset>
 	
-	<menupopup id="zotero-tb-actions-popup">
+	<menupopup id="disabled-zotero-tb-actions-popup">
 		<!-- Make sure the menu separator for utilities is visible -->
 		<menuseparator id="zotero-tb-actions-plugins-separator" hidden="false"/>
 		<menuitem insertbefore="zotero-tb-actions-separator" label="&zotero-auto-index.update;" oncommand="Zotero.AutoIndex.update()"/>
