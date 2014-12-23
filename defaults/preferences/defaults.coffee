@@ -1,4 +1,4 @@
-pref("extensions.zotero.auto-index.delay", 10)
+pref("extensions.zotero.auto-index.delay", 60)
 pref("extensions.zotero.auto-index.index-pdfs", true)
 pref("extensions.zotero.auto-index.extract-annotations", true)
 pref("extensions.zotero.auto-index.index.batch", 50)

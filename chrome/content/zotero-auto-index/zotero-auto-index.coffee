@@ -21,6 +21,12 @@ Zotero.AutoIndex =
 
     Zotero.Prefs.prefBranch.addObserver('', @prefChanged, false)
 
+    Zotero.Fulltext.indexItems = ((original) ->
+      return (items, complete, ignoreErrors) ->
+        return unless Zotero.AutoIndex.idle
+        return original.apply(this, arguments)
+      )(Zotero.Fulltext.indexItems)
+
     return
 
   prefChanged: observe: (subject, topic, data) ->
@@ -44,8 +50,6 @@ Zotero.AutoIndex =
   update: ->
     return unless @idle
 
-    # TODO: kick off using setTimeout, check whether this timeout was actually the source (approximation for "user
-    # busy")
     Zotero.DB.beginTransaction()
 
     # Get all attachments other than web links
@@ -56,12 +60,14 @@ Zotero.AutoIndex =
                                   ', [Zotero.Attachments.LINK_MODE_LINKED_URL])
 
     for item in items
+      break unless @idle
       Zotero.debug("[auto-index]: re-indexing #{item}")
       Zotero.DB.query('DELETE FROM fulltextItemWords WHERE itemID = ?', [item])
       Zotero.DB.query('DELETE FROM fulltextItems WHERE itemID = ?', [item])
       Zotero.Fulltext.indexItems([item], false, true)
-      return unless @idle
+
     Zotero.DB.commitTransaction()
+
     return
 
 # Initialize the utility

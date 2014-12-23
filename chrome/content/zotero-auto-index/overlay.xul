@@ -5,17 +5,6 @@
 <overlay id="zotero-auto-index-overlay"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	
-	<stringbundleset id="stringbundleset">
-		<stringbundle id="zotero-auto-index-strings" src="chrome://zotero-auto-index/locale/zotero-auto-index.properties"/>
-	</stringbundleset>
-	
-	<menupopup id="disabled-zotero-tb-actions-popup">
-		<!-- Make sure the menu separator for utilities is visible -->
-		<menuseparator id="zotero-tb-actions-plugins-separator" hidden="false"/>
-		<menuitem insertbefore="zotero-tb-actions-separator" label="&zotero-auto-index.update;" oncommand="Zotero.AutoIndex.update()"/>
-    <menuitem insertbefore="zotero-tb-actions-separator" label="&zotero-auto-index.name;" oncommand="Zotero.AutoIndex.openPreferenceWindow()"/>
-	</menupopup>
-	
 	<!-- Include the main extension logic -->
 	<script src="chrome://zotero/content/include.js"/>
 	<script src="chrome://zotero-auto-index/content/include.js" type="application/javascript;version=1.8"/>

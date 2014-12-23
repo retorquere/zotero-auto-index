@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!-- vim: set expandtab : -->
+<!-- vim: set ts=2 : -->
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://zotero-auto-index/skin/options.css"?>
+<!DOCTYPE window SYSTEM "chrome://zotero-auto-index/locale/zotero-auto-index.dtd">
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <prefpane id="zotero-prefpane-search">
+    <preferences id="zoto-index-preferences">
+      <preference id="pref-auto-index-delay" name="extensions.zotero.auto-index.delay" type="int"/>
+    </preferences>
+    <groupbox insertbefore="pdftools-box">
+      <caption label="&zotero.auto-index.preferences;"/>
+      <hbox align="center">
+        <label value="&zotero.auto-index.preferences.delay;"/>
+        <textbox size="4" preference="pref-auto-index-delay"/>
+        <label value="&zotero.auto-index.preferences.seconds;"/>
+      </hbox>
+    </groupbox>
+  </prefpane>
+</overlay>
