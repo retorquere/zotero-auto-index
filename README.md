@@ -3,30 +3,11 @@ zotero-auto-index
 
 Install by downloading the [latest version](https://zotplus.github.io/auto-index/zotero-auto-index-0.0.32.xpi)) (**0.0.32**)
 
-Automatically keeps your attachments indexed.
+Automatically keeps your attachments indexed. Preferences currently have no GUI, but you can tweak them through
+`about:config`:
 
-The fast indexer that was added by this plugin is now part of Zotero 4.0.18 and later; if you installed the plugin only for the faster indexer, this plugin is superfluous for you.
-
-This plugin adds ascii-ized search words in the index in addition to the words found in the PDF.
-
-## Zotfile integration
-
-If Zotfile is installed, auto-index will scan changed attachments and re-extract annotations from them during the update
-cycle. It will not kick off an initial scan -- if you want everything extracted, you'll have to do a one-time
-select-all + extract manually
-
-IMPORTANT
-=========
-
-Despite the replacement tokenizer, unless you have indexed your collection before installing this plugin, anything that
-touches any of your attachments (including sync) will cause **all** unindexed attachments to be indexed. This will
-probably take a very long time, and Zotero/Firefox will freeze entirely while it is running. This is normal. Go grab a
-cup of coffee, read that article you have been putting off, and sit it out. After this initial spike, indexing should be
-painless and automatic. Batches are currently limited to 50 attachments to not freeze Firefox for too long; you can kick
-off a new batch by choosing the 'Refresh full-text index' option from the gear menu. *In principle* this does the same
-as the "rebuild index" option from the Zotero preferences menu (Gear -&gt; Search -&gt; Rebuild Index...), except that that rebuild does everything in one fell
-swoop, and my (too large) collection causes Firefox to die during the rebuild. The 'Refresh' option can be triggered
-multiple times, and won't do anything once your entire collection is indexed.
+* extensions.zotero.auto-index.delay (10): amount of time to wait after Zotero becomes idle to start indexing
+* extensions.zotero.auto-index.reindexOnPrefChange (false): re-index all PDFs if you change the number of words to index
 
 # Support - read carefully
 
