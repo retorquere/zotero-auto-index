@@ -3,11 +3,8 @@ zotero-auto-index
 
 Install by downloading the [latest version](https://zotplus.github.io/auto-index/zotero-auto-index-0.0.33.xpi)) (**0.0.33**)
 
-Automatically keeps your attachments indexed. Preferences currently have no GUI, but you can tweak them through
+Automatically keeps your attachments indexed. Preferences can be tweaked in the Zotero `Search' settings.
 `about:config`:
-
-* extensions.zotero.auto-index.delay (10): amount of time to wait after Zotero becomes idle to start indexing
-* extensions.zotero.auto-index.reindexOnPrefChange (false): re-index all PDFs if you change the number of words to index
 
 # Support - read carefully
 
