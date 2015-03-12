@@ -4,9 +4,10 @@
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>auto-index@iris-advies.com</em:id>
 		<em:name>Zotero Auto Index Plugin</em:name>
-		<em:version>0.0.33</em:version>
+		<em:version>0.0.34</em:version>
 		<em:description>Keep Zotero Index fresh automatically</em:description>
 		<em:creator>Emiliano Heyns</em:creator>
+    <em:iconURL>chrome://zotero-auto-index/skin/auto-index.svg</em:iconURL>
 		<em:updateURL>https://zotplus.github.io/auto-index/update.rdf</em:updateURL>
 		<em:type>2</em:type> <!-- type=extension -->
 		

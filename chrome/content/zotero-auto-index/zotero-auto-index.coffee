@@ -53,11 +53,12 @@ Zotero.AutoIndex =
     Zotero.DB.beginTransaction()
 
     # Get all attachments other than web links
-    items = Zotero.DB.columnQuery('SELECT itemID
+    items = Zotero.DB.columnQuery("SELECT itemID
                                    FROM itemAttachments
-                                   WHERE linkMode <> ? AND itemID NOT IN (
-                                     SELECT itemID FROM fulltextItems WHERE indexedChars IS NOT NULL OR indexedPages IS NOT NULL)
-                                  ', [Zotero.Attachments.LINK_MODE_LINKED_URL])
+                                   WHERE linkMode <> ?
+                                    AND (mimeType in ('application/xhtml+xml', 'application/xml', 'application/x-javascript') OR mimeType like 'text/%')
+                                    AND itemID NOT IN ( SELECT itemID FROM fulltextItems WHERE indexedChars IS NOT NULL OR indexedPages IS NOT NULL)
+                                  ", [Zotero.Attachments.LINK_MODE_LINKED_URL])
 
     for item in items
       break unless @idle
