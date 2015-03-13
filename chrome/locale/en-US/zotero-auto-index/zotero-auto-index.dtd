@@ -1,3 +1,3 @@
 <!ENTITY zotero.auto-index.preferences "Auto-index when idle">
 <!ENTITY zotero.auto-index.preferences.delay "After Zotero has been idle for">
-<!ENTITY zotero.auto-index.preferences.seconds "seconds">
+<!ENTITY zotero.auto-index.preferences.seconds "seconds (requires restart after change)">
