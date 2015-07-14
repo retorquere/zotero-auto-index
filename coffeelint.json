@@ -13,17 +13,19 @@
       }
   },
 
+  "ensure_comprehensions": { "level": "error" },
+
   "cyclomatic_complexity": { "value": 10, "level": "ignore" },
 
   "duplicate_key": { "level": "error" },
 
-  "empty_constructor_needs_parens": { "level": "ignore" },
+  "empty_constructor_needs_parens": { "level": "error" },
 
   "indentation": { "value": 2, "level": "error" },
 
   "line_endings": { "level": "ignore", "value": "unix" },
 
-  "max_line_length": { "value": 300, "level": "warn", "limitComments": true },
+  "max_line_length": { "value": 600, "level": "warn", "limitComments": true },
 
   "missing_fat_arrows": { "level": "ignore" },
 
@@ -37,7 +39,7 @@
 
   "no_empty_param_list": { "level": "ignore" },
 
-  "no_implicit_braces": { "level": "warn", "strict": true },
+  "no_implicit_braces": { "level": "ignore", "strict": true },
 
   "no_implicit_parens": { "strict": true, "level": "error" },
 
@@ -63,7 +65,5 @@
 
   "prefer_english_operator": { "level": "ignore", "doubleNotLevel": "ignore" },
 
-  "space_operators": { "level": "error" },
-
-  "no_implicit_returns": { "module": "coffeelint-no-implicit-returns" }
+  "space_operators": { "level": "error" }
 }

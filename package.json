@@ -1,11 +1,11 @@
 {
   "name": "zotero-auto-index",
-  "version": "0.0.1",
+  "version": "0.6.61",
   "private": true,
-  "description": "Auto-index attachments for Zotero",
+  "description": "Auto-index for Zotero",
   "preferglobal": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "exit 0"
   },
   "repository": {
     "type": "git",
@@ -17,8 +17,7 @@
     "url": "https://github.com/ZotPlus/zotero-auto-index/issues"
   },
   "dependencies": {
-    "coffee-script": "^1.8.0",
-    "coffeelint": "^1.6.1",
-    "coffeelint-no-implicit-returns": "0.0.4"
+    "coffee-script": "^1.9.1",
+    "coffeelint": "^1.9.2"
   }
 }

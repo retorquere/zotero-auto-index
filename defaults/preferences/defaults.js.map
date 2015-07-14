@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "defaults.js",
+  "sourceRoot": "../..",
+  "sources": [
+    "defaults/preferences/defaults.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA,IAAA,CAAK,oCAAL,EAA2C,EAA3C;;AACA,IAAA,CAAK,yCAAL,EAAgD,IAAhD;;AACA,IAAA,CAAK,kDAAL,EAAyD,IAAzD;;AACA,IAAA,CAAK,0CAAL,EAAiD,EAAjD;;AACA,IAAA,CAAK,4CAAL,EAAmD,EAAnD;;AACA,IAAA,CAAK,oCAAL,EAA2C,IAA3C;;AACA,IAAA,CAAK,kDAAL,EAAyD,KAAzD"
+}
