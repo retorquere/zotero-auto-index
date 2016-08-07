@@ -4,7 +4,7 @@ machine:
     version: '2.2'
 test:
   override:
-    - true
+    - bundle exec rake
 general:
   branches:
     ignore:
