@@ -3,4 +3,3 @@ locale	zotero-auto-index	en-US		chrome/locale/en-US/zotero-auto-index/
 skin	zotero-auto-index	default		chrome/skin/default/zotero-auto-index/
 
 overlay	chrome://zotero/content/zoteroPane.xul	chrome://zotero-auto-index/content/overlay.xul
-overlay chrome://zotero/content/preferences/preferences_search.xul chrome://zotero-auto-index/content/preferences.xul

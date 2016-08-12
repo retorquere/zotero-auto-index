@@ -4,7 +4,7 @@
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>auto-index@iris-advies.com</em:id>
 		<em:name>Zotero Auto Index</em:name>
-		<em:version>0.0.37</em:version>
+		<em:version>0.0.38</em:version>
 		<em:description>Keep Zotero Index fresh automatically</em:description>
 		<em:creator>Emiliano Heyns</em:creator>
     <em:iconURL>chrome://zotero-auto-index/skin/auto-index.svg</em:iconURL>
