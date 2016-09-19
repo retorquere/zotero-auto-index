@@ -13,6 +13,9 @@ Zotero.AutoIndex =
     return
 
   init: ->
+    return if @initialized
+    @initialized = true
+
     Zotero.Fulltext.indexFile = ((original) ->
       return (file, mimeType, charset, itemID, complete, isCacheFile) ->
         Zotero.debug("[auto-index] #{file.path}: #{!!Zotero.AutoIndex.idle}")
@@ -21,18 +24,15 @@ Zotero.AutoIndex =
       )(Zotero.Fulltext.indexFile)
 
     @idleService.addIdleObserver(@idleObserver, Zotero.Prefs.get('auto-index.delay'))
-    Zotero.Prefs.prefBranch.addObserver('', @prefChanged, false)
 
-    return
+    Zotero.Prefs.registerObserver('fulltext.textMaxLength', @clearIndex)
+    Zotero.Prefs.registerObserver('fulltext.pdfMaxPages', @clearIndex)
 
-  prefChanged: observe: (subject, topic, data) ->
-    Zotero.debug("[auto-index]: options #{data} changed, enabled: #{Zotero.Prefs.get('auto-index.reindexOnPrefChange')}")
-    if (data == 'fulltext.textMaxLength' || data == 'fulltext.pdfMaxPages') && Zotero.Prefs.get('auto-index.reindexOnPrefChange')
-      Zotero.Fulltext.clearIndex(true)
-    return
+  clearIndex: ->
+    Zotero.Fulltext.clearIndex(true) if Zotero.Prefs.get('auto-index.reindexOnPrefChange')
 
-# Initialize the utility
-window.addEventListener("load", ((e) ->
+window.addEventListener('load', (load = (event) ->
+  window.removeEventListener('load', load, false) #remove listener, no longer needed
   Zotero.AutoIndex.init()
   return
 ), false)
