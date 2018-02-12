@@ -1,6 +1,6 @@
 {
   "name": "zotero-auto-index",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "Zotero Auto Index",
   "main": "index.js",
   "scripts": {
