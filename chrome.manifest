@@ -1,5 +1,5 @@
-content	zotero-auto-index				chrome/content/zotero-auto-index/
-locale	zotero-auto-index	en-US		chrome/locale/en-US/zotero-auto-index/
-skin	zotero-auto-index	default		chrome/skin/default/zotero-auto-index/
+content	zotero-auto-index				content/
+locale	zotero-auto-index	en-US		locale/en-US/
+skin	zotero-auto-index	default		skin/
 
 overlay	chrome://zotero/content/zoteroPane.xul	chrome://zotero-auto-index/content/overlay.xul

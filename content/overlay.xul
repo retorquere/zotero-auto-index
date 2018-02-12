@@ -6,6 +6,6 @@
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	
 	<!-- Include the main extension logic -->
-	<script src="chrome://zotero/content/include.js"/>
-	<script src="chrome://zotero-auto-index/content/include.js" type="application/javascript;version=1.8"/>
+  <script src="chrome://zotero/content/include.js"/>
+  <script src="chrome://zotero-auto-index/content/AutoIndex.js"/>
 </overlay>

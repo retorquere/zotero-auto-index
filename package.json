@@ -1,23 +1,49 @@
 {
   "name": "zotero-auto-index",
-  "version": "0.6.61",
-  "private": true,
-  "description": "Auto-index for Zotero",
-  "preferglobal": true,
+  "version": "5.0.0",
+  "description": "Zotero Auto Index",
+  "main": "index.js",
   "scripts": {
-    "test": "exit 0"
+    "lint": "tslint -t stylish --project .",
+    "prebuild": "npm run lint",
+    "build": "webpack",
+    "postbuild": "zotero-plugin-zipup build zotero-auto-index",
+    "release": "zotero-plugin-release"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ZotPlus/zotero-auto-index.git"
+    "url": "git+https://github.com/retorquere/zotero-auto-index.git"
   },
-  "author": "",
+  "author": {
+    "name": "Emiliano Heyns",
+    "email": "Emiliano.Heyns@iris-advies.com"
+  },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ZotPlus/zotero-auto-index/issues"
+    "url": "https://github.com/retorquere/zotero-auto-index/issues"
   },
+  "homepage": "https://github.com/retorquere/zotero-auto-index#readme",
   "dependencies": {
-    "coffee-script": "^1.9.1",
-    "coffeelint": "^1.9.2"
+    "circular-dependency-plugin": "^4.4.0",
+    "find-up": "^2.1.0",
+    "fs-extra": "^5.0.0",
+    "properties-reader": "0.0.16",
+    "pug": "^2.0.0-rc.4",
+    "replace": "^0.3.0",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "rimraf": "^2.6.2",
+    "ts-loader": "^3.5.0",
+    "ts-node": "^4.1.0",
+    "tslint": "^5.9.1",
+    "typescript": "^2.7.1",
+    "uri-templates": "^0.2.0",
+    "webpack": "^3.11.0",
+    "zotero-plugin": "0.0.19"
+  },
+  "xpi": {
+    "name": "Zotero AutoIndex",
+    "updateLink": "https://github.com/retorquere/zotero-auto-index/releases/download/v{version}/zotero-auto-index-{version}.xpi",
+    "releaseURL": "https://github.com/retorquere/zotero-auto-index/releases/download/release/"
   }
 }
