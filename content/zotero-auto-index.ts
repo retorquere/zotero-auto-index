@@ -41,11 +41,6 @@ export let AutoIndex = Zotero.AutoIndex || new class { // tslint:disable-line:va
     if (this.initialized) return
     this.initialized = true
 
-    patch(Zotero.Fulltext, 'indexFile', original => function(file, mimeType, charset, itemID, complete, isCacheFile) {
-      Zotero.debug(`[auto-index] ${file.path}: ${!!Zotero.AutoIndex.idle}`)
-      if (Zotero.AutoIndex.idle) original.apply(this, arguments)
-    })
-
     this.idleService.addIdleObserver(this, Zotero.Prefs.get('auto-index.delay'))
 
     Zotero.Prefs.registerObserver('fulltext.textMaxLength', this.clearIndex.bind(this))
