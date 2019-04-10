@@ -26,21 +26,23 @@
   "homepage": "https://github.com/retorquere/zotero-auto-index#readme",
   "dependencies": {
     "circular-dependency-plugin": "^5.0.2",
+    "d3-dsv": "^1.1.1",
     "find-up": "^3.0.0",
     "fs-extra": "^7.0.1",
     "properties-reader": "0.0.16",
     "pug": "^2.0.3",
-    "replace": "^1.0.1",
+    "replace": "^1.1.0",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2",
-    "rimraf": "^2.6.2",
-    "ts-loader": "^5.3.2",
-    "ts-node": "^7.0.1",
-    "tslint": "^5.12.0",
-    "typescript": "^3.2.2",
+    "request-promise": "^4.2.4",
+    "rimraf": "^2.6.3",
+    "toml-js": "0.0.8",
+    "ts-loader": "^5.3.3",
+    "ts-node": "^8.0.3",
+    "tslint": "^5.15.0",
+    "typescript": "^3.4.3",
     "uri-templates": "^0.2.0",
-    "webpack": "^4.28.3",
-    "zotero-plugin": "0.0.65"
+    "webpack": "^4.29.6",
+    "zotero-plugin": "0.0.72"
   },
   "xpi": {
     "name": "Zotero AutoIndex",
@@ -48,6 +50,6 @@
     "releaseURL": "https://github.com/retorquere/zotero-auto-index/releases/download/release/"
   },
   "devDependencies": {
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.3.0"
   }
 }
