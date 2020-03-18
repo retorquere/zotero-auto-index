@@ -38,7 +38,7 @@
     "toml-js": "0.0.8",
     "ts-loader": "^5.3.3",
     "ts-node": "^8.0.3",
-    "tslint": "^5.15.0",
+    "tslint": "^5.20.1",
     "typescript": "^3.4.3",
     "uri-templates": "^0.2.0",
     "webpack": "^4.29.6",
