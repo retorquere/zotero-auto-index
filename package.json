@@ -42,7 +42,7 @@
     "typescript": "^3.4.3",
     "uri-templates": "^0.2.0",
     "webpack": "^4.29.6",
-    "zotero-plugin": "0.0.72"
+    "zotero-plugin": "0.0.99"
   },
   "xpi": {
     "name": "Zotero AutoIndex",
