@@ -41,7 +41,7 @@
     "tslint": "^5.15.0",
     "typescript": "^3.4.3",
     "uri-templates": "^0.2.0",
-    "webpack": "^4.29.6",
+    "webpack": "^4.42.0",
     "zotero-plugin": "0.0.72"
   },
   "xpi": {
