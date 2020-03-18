@@ -37,7 +37,7 @@
     "rimraf": "^2.6.3",
     "toml-js": "0.0.8",
     "ts-loader": "^5.3.3",
-    "ts-node": "^8.0.3",
+    "ts-node": "^8.7.0",
     "tslint": "^5.15.0",
     "typescript": "^3.4.3",
     "uri-templates": "^0.2.0",
