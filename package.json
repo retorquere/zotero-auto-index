@@ -9,7 +9,9 @@
     "build": "webpack",
     "postbuild": "zotero-plugin-zipup build zotero-auto-index",
     "release": "zotero-plugin-release",
-    "postversion": "git push --follow-tags"
+    "postversion": "git push --follow-tags",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -42,7 +44,8 @@
     "typescript": "^3.4.3",
     "uri-templates": "^0.2.0",
     "webpack": "^4.29.6",
-    "zotero-plugin": "0.0.72"
+    "zotero-plugin": "0.0.72",
+    "snyk": "^1.316.1"
   },
   "xpi": {
     "name": "Zotero AutoIndex",
@@ -51,5 +54,6 @@
   },
   "devDependencies": {
     "webpack-cli": "^3.3.0"
-  }
+  },
+  "snyk": true
 }
