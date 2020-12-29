@@ -36,13 +36,13 @@
     "request-promise": "^4.2.4",
     "rimraf": "^2.6.3",
     "toml-js": "0.0.8",
-    "ts-loader": "^5.3.3",
+    "ts-loader": "^6.0.0",
     "ts-node": "^8.0.3",
     "tslint": "^5.15.0",
     "typescript": "^3.4.3",
     "uri-templates": "^0.2.0",
-    "webpack": "^4.29.6",
-    "zotero-plugin": "0.0.72"
+    "webpack": "^5.0.0",
+    "zotero-plugin": "0.0.81"
   },
   "xpi": {
     "name": "Zotero AutoIndex",
