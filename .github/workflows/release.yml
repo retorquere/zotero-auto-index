@@ -23,8 +23,12 @@ jobs:
     - name: install node dependencies
       run: npm install
     - name: build
-      run: npm run build
+      run: |
+        npm run build
+        ls xpi
     - name: release
-      run: npm run release
+      run: |
+        ls xpi
+        npm run release
       env:
         GITHUB_TOKEN: ${{ github.token }}
