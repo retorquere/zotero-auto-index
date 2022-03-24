@@ -1,27 +1,19 @@
 declare const Zotero: any
 declare const Components: any
 
-const marker = 'AutoIndexMonkeyPatched'
-
-function patch(object, method, patcher) {
-  if (object[method][marker]) return
-  object[method] = patcher(object[method])
-  object[method][marker] = true
-}
-
-export let AutoIndex = Zotero.AutoIndex || new class { // tslint:disable-line:variable-name
-  public idle: boolean = false
+export const AutoIndex = Zotero.AutoIndex = Zotero.AutoIndex || new class { // tslint:disable-line:variable-name
+  public idle = false
 
   private idleService = Components.classes['@mozilla.org/widget/idleservice;1'].getService(Components.interfaces.nsIIdleService)
-  private initialized: boolean = false
+  private initialized = false
 
   constructor() {
-    window.addEventListener('load', event => {
+    window.addEventListener('load', _event => {
       this.init()
     }, false)
   }
 
-  public observe(subject, topic, data) {
+  public observe(subject, topic, _data) {
     switch (topic) {
       case 'idle':
         Zotero.debug('[auto-index]: idle')
