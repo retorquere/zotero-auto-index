@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint . --ext .ts --cache --cache-location .eslintcache/",
     "build": "parallel --ungroup ::: 'npm run lint' 'node esbuild.js' 'tsc --noEmit'",
-    "postbuild": "zotero-plugin-zipup build zotero-debug-log",
+    "postbuild": "zotero-plugin-zipup build zotero-auto-index",
     "release": "zotero-plugin-release",
     "postversion": "git push --follow-tags",
     "start": "zotero-start"
