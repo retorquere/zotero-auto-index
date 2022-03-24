@@ -44,8 +44,5 @@
     "name": "Zotero AutoIndex",
     "updateLink": "https://github.com/retorquere/zotero-auto-index/releases/download/v{version}/zotero-auto-index-{version}.xpi",
     "releaseURL": "https://github.com/retorquere/zotero-auto-index/releases/download/release/"
-  },
-  "devDependencies": {
-    "webpack-cli": "^4.9.2"
   }
 }
