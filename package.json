@@ -25,27 +25,24 @@
   },
   "homepage": "https://github.com/retorquere/zotero-auto-index#readme",
   "dependencies": {
-    "@types/mocha": "^9.1.0",
-    "@typescript-eslint/eslint-plugin": "^5.16.0",
-    "@typescript-eslint/parser": "^5.16.0",
-    "esbuild": "^0.14.27",
-    "eslint": "^8.11.0",
-    "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-jsdoc": "^38.0.6",
+    "@types/mocha": "^9.1.1",
+    "@typescript-eslint/eslint-plugin": "^5.34.0",
+    "@typescript-eslint/parser": "^5.34.0",
+    "esbuild": "^0.15.5",
+    "eslint": "^8.22.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsdoc": "^39.3.6",
     "eslint-plugin-prefer-arrow": "^1.2.3",
-    "jszip": "^3.7.1",
+    "jszip": "^3.10.1",
     "mkdirp": "^1.0.4",
     "rimraf": "^3.0.2",
-    "ts-node": "^10.7.0",
-    "typescript": "^4.6.3",
-    "zotero-plugin": "^1.2.3"
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4",
+    "zotero-plugin": "^1.4.7"
   },
   "xpi": {
     "name": "Zotero AutoIndex",
     "updateLink": "https://github.com/retorquere/zotero-auto-index/releases/download/v{version}/zotero-auto-index-{version}.xpi",
     "releaseURL": "https://github.com/retorquere/zotero-auto-index/releases/download/release/"
-  },
-  "devDependencies": {
-    "webpack-cli": "^4.9.2"
   }
 }
