@@ -33,7 +33,7 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jsdoc": "^38.0.6",
     "eslint-plugin-prefer-arrow": "^1.2.3",
-    "jszip": "^3.7.1",
+    "jszip": "^3.8.0",
     "mkdirp": "^1.0.4",
     "rimraf": "^3.0.2",
     "ts-node": "^10.7.0",
